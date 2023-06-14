@@ -46,7 +46,7 @@ function newNode(coordinates, parentNode = null) {
   if (parentNode) {
     visitedSquares = [...parentNode.visitedSquares];
   }
-  visitedSquares.push(coordinates); //need attention
+  visitedSquares.push(coordinates);
   const potentialMoves = findPotentialMoves(coordinates, visitedSquares);
   if (potentialMoves.length === 0) {
     return;
@@ -55,6 +55,10 @@ function newNode(coordinates, parentNode = null) {
 }
 
 function knightMoves(start, destination) {
+  if (isSameSquare(start, finish)) {
+    console.log("Already there");
+    return;
+  }
   const queue = [newNode(start)];
   while (queue.length > 0) {
     const headOfQueue = queue[0];
