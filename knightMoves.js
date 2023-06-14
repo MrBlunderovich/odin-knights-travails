@@ -90,7 +90,7 @@ export function knightMoves(start, destination) {
   return;
 }
 
-function coordinatesToNotation([x, y]) {
+export function coordinatesToNotation([x, y]) {
   const ranks = ["a", "b", "c", "d", "e", "f", "g", "h"];
   return `${ranks[x]}${y + 1}`;
 }
@@ -138,6 +138,6 @@ export function notationToPath(startNotation, finishNotation, callback) {
 //notationToPath("a1", "h8", knightMoves);
 //notationToPath("e6", "c4", knightMoves);
 
-notationToPath("e6", "c4", knightMoves);
+/* notationToPath("e6", "c4", knightMoves);
 notationToPath("e6", "f4", knightMoves);
-notationToPath("a1", "h7", knightMoves);
+notationToPath("a1", "h7", knightMoves); */
