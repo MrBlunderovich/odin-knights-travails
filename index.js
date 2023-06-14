@@ -55,7 +55,7 @@ function newNode(coordinates, parentNode = null) {
 }
 
 function knightMoves(start, destination) {
-  if (isSameSquare(start, finish)) {
+  if (isSameSquare(start, destination)) {
     console.log("Already there");
     return;
   }
