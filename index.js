@@ -41,12 +41,6 @@ function findPotentialMoves(coordinates, visitedSquares = []) {
   }
 } //################################# END OF findPotentialMoves FUNCTION
 
-function Node(coordinates, parentNode = null, visitedSquares = []) {
-  visitedSquares.push(coordinates); //need attention
-  const potentialMoves = findPotentialMoves(coordinates);
-  return { coordinates, visitedSquares, parentNode, potentialMoves };
-}
-
 function knightMoves(start, finish, visitedSquares = [], moves = []) {
   if (moves.length === 0) {
     console.log(
@@ -88,8 +82,31 @@ function knightMoves(start, finish, visitedSquares = [], moves = []) {
 }
 /////////////////////////////////// ANOTHER TRY
 
-function knightMovesTree(start, finish) {
-  //
+function Node(coordinates, parentNode = null, visitedSquares = []) {
+  visitedSquares.push(coordinates); //need attention
+  const potentialMoves = findPotentialMoves(coordinates);
+  return { coordinates, visitedSquares, parentNode, potentialMoves };
+}
+
+function knightMovesTree(start, destination) {
+  const queue = [Node(start)];
+  while (queue.length > 0) {
+    const headOfQueue = queue[0];
+    //-------------------------------------------------------------
+    console.log("destination: ", coordinatesToNotation(destination));
+    console.log(
+      "queue: ",
+      queue.map((node) => coordinatesToNotation(node.coordinates))
+    );
+    console.log(
+      "potential moves: ",
+      headOfQueue.potentialMoves.map((move) => coordinatesToNotation(move))
+    );
+    //-------------------------------------------------------------
+
+    queue.shift();
+  } //end of loop
+  return;
 }
 
 function coordinatesToNotation([x, y]) {
@@ -137,5 +154,7 @@ function notationToPath(startNotation, finishNotation, callback) {
 //knightMoves([0, 0], [7, 7]);
 //knightMoves([4, 5], [2, 3]);
 
-notationToPath("a1", "h8", knightMoves);
-notationToPath("e6", "c4", knightMoves);
+//notationToPath("a1", "h8", knightMoves);
+//notationToPath("e6", "c4", knightMoves);
+
+notationToPath("e6", "c4", knightMovesTree);
