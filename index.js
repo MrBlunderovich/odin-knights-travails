@@ -41,47 +41,6 @@ function findPotentialMoves(coordinates, visitedSquares = []) {
   }
 } //################################# END OF findPotentialMoves FUNCTION
 
-function knightMoves(start, finish, visitedSquares = [], moves = []) {
-  if (moves.length === 0) {
-    console.log(
-      `start: ${coordinatesToNotation(start)}; finish: ${coordinatesToNotation(
-        finish
-      )}`
-    );
-  }
-  //console.log("trying square: ", coordinatesToNotation(start));
-  if (isSameSquare(start, finish)) {
-    console.log("Already there");
-    return visitedSquares;
-  }
-  visitedSquares.push(start);
-  const potentialMoves = findPotentialMoves(start, visitedSquares);
-  console.log(
-    potentialMoves.map((cell) => coordinatesToNotation(cell)).join(", ")
-  );
-  if (visitedSquares.length > 64) {
-    console.warn("Too many moves");
-    return visitedSquares;
-  }
-  for (let move of potentialMoves) {
-    console.log("trying square: ", coordinatesToNotation(move));
-    if (isSameSquare(move, finish)) {
-      moves.push(move);
-      console.log("SUCCESS!", logSquares(moves));
-      return visitedSquares;
-    }
-  }
-  for (let move of potentialMoves) {
-    moves.push(move);
-    const resolution = knightMoves(move, finish, visitedSquares, moves);
-    if (resolution) {
-      return resolution;
-    }
-  }
-  return false;
-}
-/////////////////////////////////// ANOTHER TRY
-
 function newNode(coordinates, parentNode = null) {
   let visitedSquares = [];
   if (parentNode) {
@@ -95,7 +54,7 @@ function newNode(coordinates, parentNode = null) {
   return { coordinates, visitedSquares, parentNode, potentialMoves };
 }
 
-function knightMovesTree(start, destination) {
+function knightMoves(start, destination) {
   const queue = [newNode(start)];
   while (queue.length > 0) {
     const headOfQueue = queue[0];
