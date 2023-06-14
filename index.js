@@ -55,7 +55,7 @@ function newNode(coordinates, parentNode = null) {
 }
 
 function knightMoves(start, destination) {
-  if (isSameSquare(start, finish)) {
+  if (isSameSquare(start, destination)) {
     console.log("Already there");
     return;
   }
@@ -138,6 +138,6 @@ function notationToPath(startNotation, finishNotation, callback) {
 //notationToPath("a1", "h8", knightMoves);
 //notationToPath("e6", "c4", knightMoves);
 
-notationToPath("e6", "c4", knightMovesTree);
-notationToPath("e6", "f4", knightMovesTree);
-notationToPath("a1", "h7", knightMovesTree);
+notationToPath("e6", "c4", knightMoves);
+notationToPath("e6", "f4", knightMoves);
+notationToPath("a1", "h7", knightMoves);
