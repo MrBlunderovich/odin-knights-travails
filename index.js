@@ -48,6 +48,13 @@ function Node(coordinates, parentNode = null, visitedSquares = []) {
 }
 
 function knightMoves(start, finish, visitedSquares = [], moves = []) {
+  if (moves.length === 0) {
+    console.log(
+      `start: ${coordinatesToNotation(start)}; finish: ${coordinatesToNotation(
+        finish
+      )}`
+    );
+  }
   //console.log("trying square: ", coordinatesToNotation(start));
   if (isSameSquare(start, finish)) {
     console.log("Already there");
@@ -55,6 +62,9 @@ function knightMoves(start, finish, visitedSquares = [], moves = []) {
   }
   visitedSquares.push(start);
   const potentialMoves = findPotentialMoves(start, visitedSquares);
+  console.log(
+    potentialMoves.map((cell) => coordinatesToNotation(cell)).join(", ")
+  );
   if (visitedSquares.length > 64) {
     console.warn("Too many moves");
     return visitedSquares;
@@ -76,6 +86,11 @@ function knightMoves(start, finish, visitedSquares = [], moves = []) {
   }
   return false;
 }
+/////////////////////////////////// ANOTHER TRY
+
+function knightMovesTree(start, finish) {
+  //
+}
 
 function coordinatesToNotation([x, y]) {
   const ranks = ["a", "b", "c", "d", "e", "f", "g", "h"];
@@ -96,6 +111,31 @@ function isSameSquare([x1, y1], [x2, y2]) {
   }
 }
 
+function notationToPath(startNotation, finishNotation, callback) {
+  for (let squareNotation of [startNotation, finishNotation]) {
+    if (
+      !squareNotation ||
+      !typeof squareNotation === "string" ||
+      squareNotation.length !== 2
+    ) {
+      console.error("Invalid square input");
+      return;
+    }
+  }
+
+  const ranks = ["a", "b", "c", "d", "e", "f", "g", "h"];
+
+  const startX = ranks.indexOf(startNotation[0]);
+  const startY = startNotation[1] - 1;
+  const finishX = ranks.indexOf(finishNotation[0]);
+  const finishY = finishNotation[1] - 1;
+  callback([startX, startY], [finishX, finishY]);
+}
+
 //console.log(findPotentialMoves([6, 3], [[4, 4]]));
 
-knightMoves([0, 0], [7, 7]);
+//knightMoves([0, 0], [7, 7]);
+//knightMoves([4, 5], [2, 3]);
+
+notationToPath("a1", "h8", knightMoves);
+notationToPath("e6", "c4", knightMoves);
