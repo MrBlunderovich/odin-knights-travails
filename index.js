@@ -82,27 +82,45 @@ function knightMoves(start, finish, visitedSquares = [], moves = []) {
 }
 /////////////////////////////////// ANOTHER TRY
 
-function Node(coordinates, parentNode = null, visitedSquares = []) {
+function newNode(coordinates, parentNode = null) {
+  let visitedSquares = [];
+  if (parentNode) {
+    visitedSquares = [...parentNode.visitedSquares];
+  }
   visitedSquares.push(coordinates); //need attention
-  const potentialMoves = findPotentialMoves(coordinates);
+  const potentialMoves = findPotentialMoves(coordinates, visitedSquares);
+  if (potentialMoves.length === 0) {
+    return;
+  }
   return { coordinates, visitedSquares, parentNode, potentialMoves };
 }
 
 function knightMovesTree(start, destination) {
-  const queue = [Node(start)];
+  const queue = [newNode(start)];
   while (queue.length > 0) {
     const headOfQueue = queue[0];
     //-------------------------------------------------------------
+    console.log("-------------------------------------new iteration:");
     console.log("destination: ", coordinatesToNotation(destination));
     console.log(
-      "queue: ",
-      queue.map((node) => coordinatesToNotation(node.coordinates))
+      "visited squares: ",
+      headOfQueue.visitedSquares.map((square) => coordinatesToNotation(square))
     );
     console.log(
       "potential moves: ",
       headOfQueue.potentialMoves.map((move) => coordinatesToNotation(move))
     );
     //-------------------------------------------------------------
+    for (let move of headOfQueue.potentialMoves) {
+      if (isSameSquare(move, destination)) {
+        const solution = [...headOfQueue.visitedSquares.slice(1), move];
+        console.warn("SUCCESS!", logSquares(solution));
+        return solution;
+      }
+    }
+    for (let move of headOfQueue.potentialMoves) {
+      queue.push(newNode(move, headOfQueue));
+    }
 
     queue.shift();
   } //end of loop
@@ -158,3 +176,5 @@ function notationToPath(startNotation, finishNotation, callback) {
 //notationToPath("e6", "c4", knightMoves);
 
 notationToPath("e6", "c4", knightMovesTree);
+notationToPath("e6", "f4", knightMovesTree);
+notationToPath("a1", "h7", knightMovesTree);
