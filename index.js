@@ -30,7 +30,7 @@ const chessboard = (function () {
   return board;
 })();
 
-console.log(chessboard);
+//console.log(chessboard);
 
 const container = document.querySelector(".chessboard");
 
@@ -45,7 +45,7 @@ function drawChessboard(source, container) {
     }
     //newElement.textContent = coordinatesToNotation(square);
     newElement.dataset.name = coordinatesToNotation(square);
-    newElement.dataset.coordinates = square;
+    newElement.dataset.coordinates = JSON.stringify(square);
 
     fragment.appendChild(newElement);
   });
@@ -53,3 +53,30 @@ function drawChessboard(source, container) {
 }
 
 drawChessboard(chessboard, container);
+
+document.addEventListener("click", handleClick);
+
+let searchInProgress = false;
+let startSquare = null;
+let destinationSquare = null;
+
+function handleClick(event) {
+  if (event.target.matches(".square")) {
+    if (searchInProgress) {
+      return;
+    }
+    if (startSquare === null) {
+      startSquare = JSON.parse(event.target.dataset.coordinates);
+      event.target.classList.add("start-square");
+      return;
+    }
+    if (destinationSquare === null) {
+      destinationSquare = JSON.parse(event.target.dataset.coordinates);
+      event.target.classList.add("destination-square");
+      searchInProgress = true;
+      knightMoves(startSquare, destinationSquare);
+    }
+  } else if (event.target.matches(".chessboard")) {
+    location.reload();
+  }
+}

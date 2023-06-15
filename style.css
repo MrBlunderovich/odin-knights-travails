@@ -27,6 +27,7 @@ body {
   justify-content: center;
 }
 .chessboard {
+  position: relative;
   border: 3px solid var(--color-main);
   background-color: #dbdbdb;
   --size: 80vmin;
@@ -36,6 +37,23 @@ body {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
+  cursor: pointer;
+}
+.chessboard::after,
+.chessboard::before {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #4d7dbd;
+}
+.chessboard::after {
+  content: "Click here to reset the board";
+  bottom: 0.5rem;
+}
+.chessboard::before {
+  content: "Click squares to choose start and destination";
+  top: 0.5rem;
 }
 .square {
   position: relative;
@@ -51,4 +69,20 @@ body {
 }
 .dark {
   background-color: var(--color-main);
+  color: white;
+}
+.start-square {
+  background-image: url("./img/Chess_ndt45.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.destination-square {
+  background-image: url("./img/Chess_tile_xx.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.path-square {
+  background-image: url("./img/Chess_tile_xo.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
