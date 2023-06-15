@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;500;700&display=swap");
+@import url("./visualization.css");
 * {
   box-sizing: border-box;
   font-family: inherit;
@@ -70,19 +71,4 @@ body {
 .dark {
   background-color: var(--color-main);
   color: white;
-}
-.start-square {
-  background-image: url("./img/Chess_ndt45.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-.destination-square {
-  background-image: url("./img/Chess_tile_xx.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-.path-square {
-  background-image: url("./img/Chess_tile_xo.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
 }

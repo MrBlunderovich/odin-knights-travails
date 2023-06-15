@@ -54,7 +54,9 @@ function newNode(coordinates, parentNode = null) {
   return { coordinates, visitedSquares, parentNode, potentialMoves };
 }
 
-export function knightMoves(start, destination) {
+const allSquareDivs = document.querySelectorAll(".square");
+
+export async function knightMoves(start, destination) {
   if (isSameSquare(start, destination)) {
     console.log("Already there");
     return;
@@ -74,7 +76,28 @@ export function knightMoves(start, destination) {
       headOfQueue.potentialMoves.map((move) => coordinatesToNotation(move))
     );
     //-------------------------------------------------------------
+    headOfQueue.potentialMoves.forEach((move) => {
+      const potentialDiv = document.querySelector(
+        `[data-coordinates="${JSON.stringify(move)}"]`
+      );
+      potentialDiv.classList.add("potential-square");
+    });
+    headOfQueue.visitedSquares.forEach((square) => {
+      const visitedDiv = document.querySelector(
+        `[data-coordinates="${JSON.stringify(square)}"]`
+      );
+      visitedDiv.classList.add("visited-square");
+    });
+
     for (let move of headOfQueue.potentialMoves) {
+      ///////////////////////////////////////////visualization stuff
+      const moveDiv = document.querySelector(
+        `[data-coordinates="${JSON.stringify(move)}"]`
+      );
+      moveDiv.classList.add("try-square");
+      await delay(100);
+      moveDiv.classList.remove("try-square");
+      ///////////////////////////////////////////visualization stuff
       if (isSameSquare(move, destination)) {
         const solution = [...headOfQueue.visitedSquares.slice(1), move];
         console.warn("SUCCESS!", logSquares(solution));
@@ -86,10 +109,13 @@ export function knightMoves(start, destination) {
     }
 
     queue.shift();
+    document.querySelectorAll(".square").forEach((square) => {
+      square.classList.remove("visited-square");
+    });
   } //end of loop
   return;
 }
-
+////////////////////////////////////////////////////////////////////////////
 export function coordinatesToNotation([x, y]) {
   const ranks = ["a", "b", "c", "d", "e", "f", "g", "h"];
   return `${ranks[x]}${y + 1}`;
@@ -128,6 +154,14 @@ export function notationToPath(startNotation, finishNotation, callback) {
   const finishX = ranks.indexOf(finishNotation[0]);
   const finishY = finishNotation[1] - 1;
   callback([startX, startY], [finishX, finishY]);
+}
+
+function delay(milliseconds) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, milliseconds);
+  });
 }
 
 //console.log(findPotentialMoves([6, 3], [[4, 4]]));
