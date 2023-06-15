@@ -64,40 +64,12 @@ export async function knightMoves(start, destination) {
   const queue = [newNode(start)];
   while (queue.length > 0) {
     const headOfQueue = queue[0];
-    //-------------------------------------------------------------
-    console.log("-------------------------------------new iteration:");
-    console.log("destination: ", coordinatesToNotation(destination));
-    console.log(
-      "visited squares: ",
-      headOfQueue.visitedSquares.map((square) => coordinatesToNotation(square))
-    );
-    console.log(
-      "potential moves: ",
-      headOfQueue.potentialMoves.map((move) => coordinatesToNotation(move))
-    );
-    //-------------------------------------------------------------
-    headOfQueue.potentialMoves.forEach((move) => {
-      const potentialDiv = document.querySelector(
-        `[data-coordinates="${JSON.stringify(move)}"]`
-      );
-      potentialDiv.classList.add("potential-square");
-    });
-    headOfQueue.visitedSquares.forEach((square) => {
-      const visitedDiv = document.querySelector(
-        `[data-coordinates="${JSON.stringify(square)}"]`
-      );
-      visitedDiv.classList.add("visited-square");
-    });
+    visualization.consoleLog(headOfQueue, destination);
+    visualization.higlightPotential(headOfQueue);
+    visualization.highlightVisited(headOfQueue);
 
     for (let move of headOfQueue.potentialMoves) {
-      ///////////////////////////////////////////visualization stuff
-      const moveDiv = document.querySelector(
-        `[data-coordinates="${JSON.stringify(move)}"]`
-      );
-      moveDiv.classList.add("try-square");
-      await delay(100);
-      moveDiv.classList.remove("try-square");
-      ///////////////////////////////////////////visualization stuff
+      await visualization.markMove(move, 100);
       if (isSameSquare(move, destination)) {
         const solution = [...headOfQueue.visitedSquares.slice(1), move];
         console.warn("SUCCESS!", logSquares(solution));
@@ -109,9 +81,8 @@ export async function knightMoves(start, destination) {
     }
 
     queue.shift();
-    document.querySelectorAll(".square").forEach((square) => {
-      square.classList.remove("visited-square");
-    });
+
+    visualization.unhighlightVisited();
   } //end of loop
   return;
 }
@@ -156,22 +127,68 @@ export function notationToPath(startNotation, finishNotation, callback) {
   callback([startX, startY], [finishX, finishY]);
 }
 
-function delay(milliseconds) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, milliseconds);
-  });
-}
+const visualization = (function () {
+  async function markMove(move, milliseconds) {
+    const moveDiv = document.querySelector(
+      `[data-coordinates="${JSON.stringify(move)}"]`
+    );
+    moveDiv.classList.add("try-square");
+    await delay(100);
+    moveDiv.classList.remove("try-square");
+  }
 
-//console.log(findPotentialMoves([6, 3], [[4, 4]]));
+  function higlightPotential(node) {
+    node.potentialMoves.forEach((move) => {
+      const potentialDiv = document.querySelector(
+        `[data-coordinates="${JSON.stringify(move)}"]`
+      );
+      potentialDiv.classList.add("potential-square");
+    });
+  }
 
-//knightMoves([0, 0], [7, 7]);
-//knightMoves([4, 5], [2, 3]);
+  function highlightVisited(node) {
+    node.visitedSquares.forEach((square) => {
+      const visitedDiv = document.querySelector(
+        `[data-coordinates="${JSON.stringify(square)}"]`
+      );
+      visitedDiv.classList.add("visited-square");
+    });
+  }
 
-//notationToPath("a1", "h8", knightMoves);
-//notationToPath("e6", "c4", knightMoves);
+  function unhighlightVisited() {
+    document.querySelectorAll(".square").forEach((square) => {
+      square.classList.remove("visited-square");
+    });
+  }
 
-/* notationToPath("e6", "c4", knightMoves);
-notationToPath("e6", "f4", knightMoves);
-notationToPath("a1", "h7", knightMoves); */
+  function consoleLog(node, destination) {
+    console.log(
+      "destination: ",
+      coordinatesToNotation(destination),
+      "--------------- new iteration:"
+    );
+    console.log(
+      "visited squares: ",
+      node.visitedSquares.map((square) => coordinatesToNotation(square))
+    );
+    console.log(
+      "potential moves: ",
+      node.potentialMoves.map((move) => coordinatesToNotation(move))
+    );
+  }
+
+  function delay(milliseconds) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, milliseconds);
+    });
+  }
+  return {
+    markMove,
+    higlightPotential,
+    highlightVisited,
+    unhighlightVisited,
+    consoleLog,
+  };
+})();
