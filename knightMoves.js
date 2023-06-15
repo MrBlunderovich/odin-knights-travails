@@ -54,8 +54,6 @@ function newNode(coordinates, parentNode = null) {
   return { coordinates, visitedSquares, parentNode, potentialMoves };
 }
 
-const allSquareDivs = document.querySelectorAll(".square");
-
 export async function knightMoves(start, destination) {
   if (isSameSquare(start, destination)) {
     console.log("Already there");
@@ -82,7 +80,8 @@ export async function knightMoves(start, destination) {
 
     queue.shift();
 
-    visualization.unhighlightVisited();
+    visualization.eraseVisited();
+    visualization.erasePotential();
   } //end of loop
   return;
 }
@@ -142,7 +141,7 @@ const visualization = (function () {
       const potentialDiv = document.querySelector(
         `[data-coordinates="${JSON.stringify(move)}"]`
       );
-      potentialDiv.classList.add("potential-square");
+      potentialDiv.classList.add("potential-square", "observed-square");
     });
   }
 
@@ -155,9 +154,15 @@ const visualization = (function () {
     });
   }
 
-  function unhighlightVisited() {
+  function eraseVisited() {
     document.querySelectorAll(".square").forEach((square) => {
       square.classList.remove("visited-square");
+    });
+  }
+
+  function erasePotential() {
+    document.querySelectorAll(".square").forEach((square) => {
+      square.classList.remove("potential-square");
     });
   }
 
@@ -188,7 +193,8 @@ const visualization = (function () {
     markMove,
     higlightPotential,
     highlightVisited,
-    unhighlightVisited,
+    eraseVisited,
+    erasePotential,
     consoleLog,
   };
 })();

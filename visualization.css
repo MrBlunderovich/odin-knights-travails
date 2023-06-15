@@ -13,7 +13,7 @@
   background-repeat: no-repeat;
   background-size: cover;
 }
-.potential-square::after {
+.observed-square::after {
   content: "";
   position: absolute;
   width: 100%;
@@ -22,6 +22,9 @@
   background-repeat: no-repeat;
   background-size: cover;
   opacity: 0.1;
+}
+.potential-square::after {
+  opacity: 0.5;
 }
 .visited-square::after {
   opacity: 1;
