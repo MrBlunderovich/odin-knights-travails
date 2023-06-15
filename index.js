@@ -1,143 +1,82 @@
-//
+import {
+  knightMoves,
+  notationToPath,
+  coordinatesToNotation,
+} from "./knightMoves.js";
 
-function findPotentialMoves(coordinates, visitedSquares = []) {
-  const [x, y] = coordinates;
-  const BOARD_SIZE = 7;
-  const candidateMoves = [
-    [x + 2, y + 1],
-    [x + 2, y - 1],
-    [x - 2, y + 1],
-    [x - 2, y - 1],
-    [x + 1, y + 2],
-    [x + 1, y - 2],
-    [x - 1, y + 2],
-    [x - 1, y - 2],
-  ].filter((square) => squareIsInsideBoard(square));
-  //logSquares(candidateMoves);
+/* notationToPath("e6", "c4", knightMoves);
+notationToPath("e6", "f4", knightMoves);
+notationToPath("a1", "h7", knightMoves); */
 
-  const potentialMoves = candidateMoves.filter((square) => {
-    return notYetVisited(square);
+/* const chessboard = (function () {
+  const board = [];
+  for (let rank = 0; rank < 8; rank++) {
+    const newRank = [];
+    for (let file = 0; file < 8; file++) {
+      newRank.push([rank, file]);
+      //newRank.push(`${rank}:${file}`);
+    }
+    board.push(newRank);
+  }
+  return board;
+})(); */
+const chessboard = (function () {
+  const board = [];
+  for (let rank = 7; rank >= 0; rank--) {
+    for (let file = 0; file < 8; file++) {
+      board.push([file, rank]);
+    }
+  }
+  return board;
+})();
+
+//console.log(chessboard);
+
+const container = document.querySelector(".chessboard");
+
+function drawChessboard(source, container) {
+  container.innerHTML = "";
+  const fragment = document.createDocumentFragment();
+  source.forEach((square) => {
+    const newElement = document.createElement("div");
+    newElement.classList.add("square");
+    if ((square[0] + square[1]) % 2 === 0) {
+      newElement.classList.add("dark");
+    }
+    //newElement.textContent = coordinatesToNotation(square);
+    newElement.dataset.name = coordinatesToNotation(square);
+    newElement.dataset.coordinates = JSON.stringify(square);
+
+    fragment.appendChild(newElement);
   });
-  //logSquares(potentialMoves);
-  return potentialMoves;
-
-  ////////////////////////////////////////////////////////////////
-
-  function notYetVisited([x, y]) {
-    for (let square of visitedSquares) {
-      if (square[0] === x && square[1] === y) {
-        //console.log(coordinatesToSquare(square), " visited!");
-        return false;
-      }
-    }
-    return true;
-  }
-
-  function squareIsInsideBoard([x, y]) {
-    if (x < 0 || y < 0 || x > BOARD_SIZE || y > BOARD_SIZE) {
-      return false;
-    }
-    return true;
-  }
-} //################################# END OF findPotentialMoves FUNCTION
-
-function newNode(coordinates, parentNode = null) {
-  let visitedSquares = [];
-  if (parentNode) {
-    visitedSquares = [...parentNode.visitedSquares];
-  }
-  visitedSquares.push(coordinates);
-  const potentialMoves = findPotentialMoves(coordinates, visitedSquares);
-  if (potentialMoves.length === 0) {
-    return;
-  }
-  return { coordinates, visitedSquares, parentNode, potentialMoves };
+  container.appendChild(fragment);
 }
 
-function knightMoves(start, destination) {
-  if (isSameSquare(start, destination)) {
-    console.log("Already there");
-    return;
-  }
-  const queue = [newNode(start)];
-  while (queue.length > 0) {
-    const headOfQueue = queue[0];
-    //-------------------------------------------------------------
-    console.log("-------------------------------------new iteration:");
-    console.log("destination: ", coordinatesToNotation(destination));
-    console.log(
-      "visited squares: ",
-      headOfQueue.visitedSquares.map((square) => coordinatesToNotation(square))
-    );
-    console.log(
-      "potential moves: ",
-      headOfQueue.potentialMoves.map((move) => coordinatesToNotation(move))
-    );
-    //-------------------------------------------------------------
-    for (let move of headOfQueue.potentialMoves) {
-      if (isSameSquare(move, destination)) {
-        const solution = [...headOfQueue.visitedSquares.slice(1), move];
-        console.warn("SUCCESS!", logSquares(solution));
-        return solution;
-      }
-    }
-    for (let move of headOfQueue.potentialMoves) {
-      queue.push(newNode(move, headOfQueue));
-    }
+drawChessboard(chessboard, container);
 
-    queue.shift();
-  } //end of loop
-  return;
-}
+document.addEventListener("click", handleClick);
 
-function coordinatesToNotation([x, y]) {
-  const ranks = ["a", "b", "c", "d", "e", "f", "g", "h"];
-  return `${ranks[x]}${y + 1}`;
-}
+let searchInProgress = false;
+let startSquare = null;
+let destinationSquare = null;
 
-function logSquares(array) {
-  const output = array.map((square) => coordinatesToNotation(square));
-  //console.log(output);
-  return output;
-}
-
-function isSameSquare([x1, y1], [x2, y2]) {
-  if (x1 === x2 && y1 === y2) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function notationToPath(startNotation, finishNotation, callback) {
-  for (let squareNotation of [startNotation, finishNotation]) {
-    if (
-      !squareNotation ||
-      !typeof squareNotation === "string" ||
-      squareNotation.length !== 2
-    ) {
-      console.error("Invalid square input");
+function handleClick(event) {
+  if (event.target.matches(".square")) {
+    if (searchInProgress) {
       return;
     }
+    if (startSquare === null) {
+      startSquare = JSON.parse(event.target.dataset.coordinates);
+      event.target.classList.add("start-square");
+      return;
+    }
+    if (destinationSquare === null) {
+      destinationSquare = JSON.parse(event.target.dataset.coordinates);
+      event.target.classList.add("destination-square");
+      searchInProgress = true;
+      knightMoves(startSquare, destinationSquare);
+    }
+  } else if (event.target.matches(".chessboard")) {
+    location.reload();
   }
-
-  const ranks = ["a", "b", "c", "d", "e", "f", "g", "h"];
-
-  const startX = ranks.indexOf(startNotation[0]);
-  const startY = startNotation[1] - 1;
-  const finishX = ranks.indexOf(finishNotation[0]);
-  const finishY = finishNotation[1] - 1;
-  callback([startX, startY], [finishX, finishY]);
 }
-
-//console.log(findPotentialMoves([6, 3], [[4, 4]]));
-
-//knightMoves([0, 0], [7, 7]);
-//knightMoves([4, 5], [2, 3]);
-
-//notationToPath("a1", "h8", knightMoves);
-//notationToPath("e6", "c4", knightMoves);
-
-notationToPath("e6", "c4", knightMoves);
-notationToPath("e6", "f4", knightMoves);
-notationToPath("a1", "h7", knightMoves);

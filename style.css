@@ -1,0 +1,74 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;500;700&display=swap");
+@import url("./visualization.css");
+* {
+  box-sizing: border-box;
+  font-family: inherit;
+  margin: 0;
+  padding: 0;
+}
+:root {
+  --color-main: #4d7dbd;
+  --color-light: #a9ceff;
+}
+body {
+  font-family: "Montserrat", sans-serif;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background-color: var(--color-main);
+  padding: 1rem 3rem;
+}
+.main {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chessboard {
+  position: relative;
+  border: 3px solid var(--color-main);
+  background-color: #dbdbdb;
+  --size: 80vmin;
+  width: var(--size);
+  height: var(--size);
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  cursor: pointer;
+}
+.chessboard::after,
+.chessboard::before {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #4d7dbd;
+}
+.chessboard::after {
+  content: "Click here to reset the board";
+  bottom: 0.5rem;
+}
+.chessboard::before {
+  content: "Click squares to choose start and destination";
+  top: 0.5rem;
+}
+.square {
+  position: relative;
+  background-color: #fff;
+  /* border: 1px solid var(--color-main); */
+}
+.square::before {
+  position: absolute;
+  left: 0.3rem;
+  bottom: 0.3rem;
+  font-weight: 100;
+  content: attr(data-name);
+}
+.dark {
+  background-color: var(--color-main);
+  color: white;
+}

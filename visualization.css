@@ -1,0 +1,28 @@
+.start-square {
+  background-image: url("./img/Chess_ndt45.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.destination-square {
+  background-image: url("./img/Chess_tile_xx.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.try-square {
+  background-image: url("./img/Chess_tile_xo.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.potential-square::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url("./img/Chess_tile_xo.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.1;
+}
+.visited-square::after {
+  opacity: 1;
+}
