@@ -71,6 +71,7 @@ export async function knightMoves(start, destination) {
       if (isSameSquare(move, destination)) {
         const solution = [...headOfQueue.visitedSquares.slice(1), move];
         console.warn("SUCCESS!", logSquares(solution));
+        visualization.tracePath([...headOfQueue.visitedSquares, move]);
         return solution;
       }
     }
@@ -93,7 +94,6 @@ export function coordinatesToNotation([x, y]) {
 
 function logSquares(array) {
   const output = array.map((square) => coordinatesToNotation(square));
-  //console.log(output);
   return output;
 }
 
@@ -182,6 +182,50 @@ const visualization = (function () {
     );
   }
 
+  function tracePath(arrayOfSquares) {
+    const board = document.querySelector(".chessboard");
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", board.clientWidth);
+    svg.setAttribute("height", board.clientHeight);
+    svg.setAttribute("class", "svg-line");
+    //
+    const arrayOfMoves = arrayOfSquares.reduce((acc, item, index, array) => {
+      if (array[index - 1]) {
+        acc.push([array[index - 1], item]);
+        return acc;
+      }
+      return acc;
+    }, []);
+    //
+    arrayOfMoves.forEach((move) => {
+      const start = move[0];
+      const end = move[1];
+      const startSquare = document.querySelector(
+        `[data-coordinates="${JSON.stringify(start)}"]`
+      );
+      const endSquare = document.querySelector(
+        `[data-coordinates="${JSON.stringify(end)}"]`
+      );
+      const coordinates = {
+        x1: startSquare.offsetLeft + Math.floor(startSquare.clientWidth / 2),
+        y1: startSquare.offsetTop + Math.floor(startSquare.clientHeight / 2),
+        x2: endSquare.offsetLeft + Math.floor(endSquare.clientWidth / 2),
+        y2: endSquare.offsetTop + Math.floor(endSquare.clientHeight / 2),
+      };
+      const svgLine = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "line"
+      );
+      svgLine.setAttribute("x1", coordinates.x1);
+      svgLine.setAttribute("y1", coordinates.y1);
+      svgLine.setAttribute("x2", coordinates.x2);
+      svgLine.setAttribute("y2", coordinates.y2);
+      svg.appendChild(svgLine);
+    });
+
+    board.appendChild(svg);
+  }
+
   function delay(milliseconds) {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -196,5 +240,6 @@ const visualization = (function () {
     eraseVisited,
     erasePotential,
     consoleLog,
+    tracePath,
   };
 })();

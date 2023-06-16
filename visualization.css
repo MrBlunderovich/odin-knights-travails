@@ -29,3 +29,10 @@
 .visited-square::after {
   opacity: 1;
 }
+.svg-line {
+  position: absolute;
+}
+.svg-line line {
+  stroke-width: 5;
+  stroke: black;
+}
