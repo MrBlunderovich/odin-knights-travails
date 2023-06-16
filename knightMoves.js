@@ -65,12 +65,14 @@ export async function knightMoves(start, destination) {
     visualization.consoleLog(headOfQueue, destination);
     visualization.higlightPotential(headOfQueue);
     visualization.highlightVisited(headOfQueue);
+    visualization.tracePath(headOfQueue.visitedSquares);
 
     for (let move of headOfQueue.potentialMoves) {
       await visualization.markMove(move, 100);
       if (isSameSquare(move, destination)) {
         const solution = [...headOfQueue.visitedSquares.slice(1), move];
         console.warn("SUCCESS!", logSquares(solution));
+        visualization.erasePath();
         visualization.tracePath([...headOfQueue.visitedSquares, move]);
         return solution;
       }
@@ -83,6 +85,7 @@ export async function knightMoves(start, destination) {
 
     visualization.eraseVisited();
     visualization.erasePotential();
+    visualization.erasePath();
   } //end of loop
   return;
 }
@@ -225,6 +228,11 @@ const visualization = (function () {
 
     board.appendChild(svg);
   }
+  function erasePath() {
+    const board = document.querySelector(".chessboard");
+    const path = document.querySelector(".svg-line");
+    board.removeChild(path);
+  }
 
   function delay(milliseconds) {
     return new Promise((resolve) => {
@@ -241,5 +249,6 @@ const visualization = (function () {
     erasePotential,
     consoleLog,
     tracePath,
+    erasePath,
   };
 })();
