@@ -61,6 +61,9 @@ let startSquare = null;
 let destinationSquare = null;
 
 function handleClick(event) {
+  if (searchInProgress) {
+    location.reload();
+  }
   if (event.target.matches(".square")) {
     if (searchInProgress) {
       return;
@@ -76,7 +79,5 @@ function handleClick(event) {
       searchInProgress = true;
       knightMoves(startSquare, destinationSquare);
     }
-  } else if (event.target.matches(".chessboard")) {
-    location.reload();
   }
 }

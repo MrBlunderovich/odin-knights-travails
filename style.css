@@ -49,7 +49,7 @@ body {
   color: #4d7dbd;
 }
 .chessboard::after {
-  content: "Click here to reset the board";
+  content: "Click anywhere to reset the board";
   bottom: 0.5rem;
 }
 .chessboard::before {
