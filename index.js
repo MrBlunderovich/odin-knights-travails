@@ -1,25 +1,5 @@
-import {
-  knightMoves,
-  notationToPath,
-  coordinatesToNotation,
-} from "./knightMoves.js";
+import { knightMoves, coordinatesToNotation } from "./knightMoves.js";
 
-/* notationToPath("e6", "c4", knightMoves);
-notationToPath("e6", "f4", knightMoves);
-notationToPath("a1", "h7", knightMoves); */
-
-/* const chessboard = (function () {
-  const board = [];
-  for (let rank = 0; rank < 8; rank++) {
-    const newRank = [];
-    for (let file = 0; file < 8; file++) {
-      newRank.push([rank, file]);
-      //newRank.push(`${rank}:${file}`);
-    }
-    board.push(newRank);
-  }
-  return board;
-})(); */
 const chessboard = (function () {
   const board = [];
   for (let rank = 7; rank >= 0; rank--) {
@@ -29,8 +9,6 @@ const chessboard = (function () {
   }
   return board;
 })();
-
-//console.log(chessboard);
 
 const container = document.querySelector(".chessboard");
 
@@ -43,7 +21,6 @@ function drawChessboard(source, container) {
     if ((square[0] + square[1]) % 2 === 0) {
       newElement.classList.add("dark");
     }
-    //newElement.textContent = coordinatesToNotation(square);
     newElement.dataset.name = coordinatesToNotation(square);
     newElement.dataset.coordinates = JSON.stringify(square);
 

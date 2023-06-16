@@ -33,6 +33,6 @@
   position: absolute;
 }
 .svg-line line {
-  stroke-width: 5;
+  stroke-width: min(0.5vmin, 5px);
   stroke: black;
 }
