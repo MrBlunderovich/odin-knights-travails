@@ -38,7 +38,7 @@ let startSquare = null;
 let destinationSquare = null;
 
 function handleClick(event) {
-  if (searchInProgress) {
+  if (searchInProgress && event.target.closest(".chessboard")) {
     location.reload();
   }
   if (event.target.matches(".square")) {

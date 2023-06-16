@@ -21,7 +21,7 @@
   background-image: url("./img/Chess_tile_xo.svg");
   background-repeat: no-repeat;
   background-size: cover;
-  opacity: 0.1;
+  opacity: 0;
 }
 .potential-square::after {
   opacity: 0.5;
